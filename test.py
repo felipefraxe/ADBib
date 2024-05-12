@@ -7,8 +7,8 @@ def main():
 
     # data = [18, 13, 11, 8, 10, 58, 12, -3]
 
-    ADBib.plot_histogram(data)
-    print(ADBib.mode(data))
+    #ADBib.plot_histogram(data)
+    print(ADBib.amplitude(data))
 
 if __name__ == "__main__":
     main()
