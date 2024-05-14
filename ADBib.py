@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import math
 
+DECIMAL_PLACES = 1
 
 def mode(data):
     historgram = build_histogram(data)
@@ -15,30 +16,31 @@ def median(data):
 
 
 def arithmetic_mean(data):
-    return sum(data) / len(data)
+    return round(sum(data) / len(data), DECIMAL_PLACES)
 
 
 def weighted_mean(data):
-    sum, weight = 0, 0
-    for i in range(0, len(data), 2):
-        sum += (data[i] * data[i+1])
-        weight += data[i+1]
+    sum_product, sum_weights = 0,0
 
-    return sum / weight
+    for value, weight in data:
+        sum_product += value * weight
+        sum_weights += weight
+
+    return round(sum_product / sum_weights, DECIMAL_PLACES)
 
 
 def geometric_mean(data):
     prod = 1
     for num in data:
         prod *= num
-    return prod ** (1 / len(data))
+    return round(prod ** (1 / len(data)), DECIMAL_PLACES)
 
 
 def harmonic_mean(data):
     sum = 0
     for num in data:
         sum += (1 / num)
-    return len(data) / sum
+    return round(len(data) / sum, DECIMAL_PLACES)
 
 
 def amplitude(data):
@@ -71,10 +73,44 @@ def build_histogram(data):
     return histogram
 
 
-def plot_histogram(data):
+def plot_histogram(data, y_label='Frequency', x_label='Values', title='Histogram'):
     histogram = build_histogram(data)
     plt.bar(histogram.keys(), histogram.values())
-    plt.xlabel('Values')
-    plt.ylabel('Frequency')
-    plt.title('Histogram')
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.title(title)
     plt.show()
+
+
+def plot_boxplot(data):
+    plt.figure(figsize=(8, 6))
+    plt.boxplot(data)
+    plt.title('Box Plot')
+    plt.ylabel('Value')
+    plt.show()
+
+
+def plot_values_with_mean(data, mean):
+    # Verifica se 'data' é uma lista de tuplas
+    if isinstance(data[0], tuple):
+        values = [value for value, _ in data]
+    else:
+        values = data
+
+    plt.bar(range(len(values)), values, width=0.4, align='center')
+    plt.axhline(mean, color='r', linestyle='-', label=f'Média: {mean}')
+    plt.legend()
+    plt.show()
+
+
+def calculate_quartile(data):
+    data = sorted(data)
+    q1 = data[len(data) // 4]
+    q2 = data[len(data) // 2]
+    q3 = data[(2 * len(data)) // 3]
+    return q1, q2, q3
+
+
+def interquartile_amp(data):
+    q1, _, q3 = calculate_quartile(data)
+    return q3 - q1
