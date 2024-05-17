@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import math
 
-DECIMAL_PLACES = 1
+DECIMAL_PLACES = 2
 
 def mode(data):
     historgram = build_histogram(data)
