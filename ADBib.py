@@ -387,6 +387,19 @@ def zero_mean_test(sample_a, sample_b, confidence_degree=0.99):
     return min < 0 and max > 0
 
 
+def estimate_sample_size(confidence_degree, std_dev, mean=None, length=None, precision=None):
+    confidence_value = {
+        0.9: 1.645,
+        0.95: 1.960,
+        0.99: 2.576
+    }
+
+    if length is None and precision is not None and mean is not None:
+        return round(((100 * std_dev * confidence_value[confidence_degree]) / (precision * mean)) ** 2, DECIMAL_PLACES)
+
+    return round((4 * ((std_dev * confidence_value[confidence_degree]) ** 2)) / (length ** 2), DECIMAL_PLACES)
+
+
 def plot_histogram(data, y_label='Frequency', x_label='Values', title='Histogram'):
     """
     Plots a histogram from a dataset.
