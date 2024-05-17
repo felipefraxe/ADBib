@@ -40,7 +40,7 @@ def weighted_mean(data):
 
 def geometric_mean(data):
     """
-    Calculates the geometric mean of a dataset.
+    Calculates the geometric mean of a dataset using logarithms to avoid overflow.
 
     Args:
         data: A list of positive values.
@@ -48,10 +48,8 @@ def geometric_mean(data):
     Returns:
         The geometric mean of the dataset.
     """
-    prod = 1
-    for num in data:
-        prod *= num
-    return round(prod ** (1 / len(data)), DECIMAL_PLACES)
+    log_sum = sum(math.log(num) for num in data)
+    return round(math.exp(log_sum / len(data)), DECIMAL_PLACES)
 
 
 def harmonic_mean(data):
@@ -218,8 +216,8 @@ def plot_amplitude(data):
     
     plt.bar(range(len(data)), data, width=0.4, align='center')
     
-    plt.axhline(min_val, color='g', linestyle='-', label=f'Min value: {min_val}')
-    plt.axhline(max_val, color='r', linestyle='-', label=f'Max value: {max_val}')
+    plt.axhline(max_val, color='b', linestyle='-', label=f'Max value: {max_val}')
+    plt.axhline(min_val, color='r', linestyle='-', label=f'Min value: {min_val}')
     
     plt.legend()
     plt.xlabel('Index')
@@ -241,7 +239,7 @@ def variance(data):
     sum_squares = 0
     for num in data:
         sum_squares += (num - mean) ** 2
-    return round(sum_squares / (len(data) - 1), DECIMAL_PLACES)
+    return round(sum_squares / (len(data)), DECIMAL_PLACES)
 
 
 def standard_deviation(data):
@@ -380,6 +378,23 @@ def plot_histogram(data, y_label='Frequency', x_label='Values', title='Histogram
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.title(title)
+    plt.show()
+
+
+def plot_histogram_avengers(data, bins='auto'):
+    """
+    Plota um histograma para os dados fornecidos.
+
+    Args:
+        data: Lista de valores.
+        bins: Número de bins (intervalos) para o histograma. Pode ser um inteiro ou 'auto' para definir automaticamente.
+    """
+    plt.figure(figsize=(10, 6))  # Tamanho da figura
+    plt.hist(data, bins=bins, edgecolor='black')
+    plt.xlabel('Appearances')
+    plt.ylabel('Frequency')
+    plt.title('Histogram')
+    plt.grid(axis='y', alpha=0.75)  # Adiciona grade no eixo y para melhor visualização
     plt.show()
 
 
