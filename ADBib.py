@@ -98,24 +98,81 @@ def harmonic_mean(data):
 
 
 def amplitude(data):
+    """
+    Calculates the amplitude of a dataset.
+
+    Args:
+        data: A list of numerical values.
+
+    Returns:
+        The amplitude of the dataset.
+    """
     min_val, max_val = min(data), max(data)
     return max_val - min_val
 
 
+def plot_amplitude(data):
+    """
+    Plots a bar chart showing the values in the dataset and highlights the min and max values.
+
+    Args:
+        data: A list of numerical values.
+    """
+    min_val, max_val = min(data), max(data)
+    amp = amplitude(data)
+    
+    plt.bar(range(len(data)), data, width=0.4, align='center')
+    
+    plt.axhline(min_val, color='g', linestyle='-', label=f'Min value: {min_val}')
+    plt.axhline(max_val, color='r', linestyle='-', label=f'Max value: {max_val}')
+    
+    plt.legend()
+    plt.xlabel('Index')
+    plt.ylabel('Value')
+    plt.show()
+
+
 def variance(data):
+    """
+    Calculates the sample variance of a dataset.
+
+    Args:
+        data: A list of numerical values.
+
+    Returns:
+        The sample variance of the dataset.
+    """
     mean = arithmetic_mean(data)
-    sum = 0
+    sum_squares = 0
     for num in data:
-        sum += ((num - mean) ** 2)
-    return sum / len(data)
+        sum_squares += (num - mean) ** 2
+    return round(sum_squares / (len(data) - 1), DECIMAL_PLACES)
 
 
 def standard_deviation(data):
-    return math.sqrt(variance(data))
+    """
+    Calculates the sample standard deviation of a dataset.
+
+    Args:
+        data: A list of numerical values.
+
+    Returns:
+        The sample standard deviation of the dataset.
+    """
+    return round(math.sqrt(variance(data)), DECIMAL_PLACES)
 
 
-def variation_coefficient(data):
-    return (standard_deviation(data) / arithmetic_mean(data)) * 100
+def coefficient_of_variation(data):
+    """
+    Calculates the variation coefficient of a dataset.
+
+    Args:
+        data: A list of numerical values.
+        
+    Returns:
+        The variation coefficient of the dataset.
+    """
+    return round((standard_deviation(data) / arithmetic_mean(data)) * 100, DECIMAL_PLACES)
 
 
 def build_histogram(data):
@@ -145,6 +202,13 @@ def plot_boxplot(data):
 
 
 def plot_values_with_mean(data, mean):
+    """
+    Plots a bar chart showing the values in the dataset and highlights the mean value.
+
+    Args:
+        data: A list of numerical values.
+        mean: The mean value of the dataset.
+    """
     # Verifica se 'data' é uma lista de tuplas
     if isinstance(data[0], tuple):
         values = [value for value, _ in data]
@@ -153,7 +217,10 @@ def plot_values_with_mean(data, mean):
 
     plt.bar(range(len(values)), values, width=0.4, align='center')
     plt.axhline(mean, color='r', linestyle='-', label=f'Média: {mean}')
+    
     plt.legend()
+    plt.xlabel('Index')
+    plt.ylabel('Value')
     plt.show()
 
 
