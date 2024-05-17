@@ -3,35 +3,6 @@ import math
 
 DECIMAL_PLACES = 2
 
-def mode(data):
-    """
-    Calculates the mode of a dataset.
-
-    Args:
-        data: A list of values.
-
-    Returns:
-        The mode of the dataset.
-    """
-    historgram = build_histogram(data)
-    return max(historgram, key=historgram.get)
-
-
-def median(data):
-    """
-    Calculates the median of a dataset.
-
-    Args:
-        data: A list of values.
-
-    Returns:
-        The median of the dataset.
-    """
-    data = sorted(data)
-    if len(data) % 2 == 0:
-        return (data[len(data) // 2] + data[(len(data) // 2) - 1]) / 2
-    return data[len(data) // 2]
-
 
 def arithmetic_mean(data):
     """
@@ -145,6 +116,78 @@ def mean_rate_case3(data):
 
     sum_reciprocals = sum(denominator / numerator for numerator, denominator in data)
     return len(data) / sum_reciprocals
+
+
+def select_appropriate_mean(data, physical=False, weight=False, rates=False):
+    """
+    Analyzes a dataset and selects the most appropriate mean to use (arithmetic, weighted, geometric, harmonic, or mean rate cases).
+
+    Args:
+        data: A list of values or tuples (if weights are provided).
+        physical: If True, considers mean rate cases. Defaults to False.
+        weight: If True and physical is False, uses weighted mean. Defaults to False.
+
+    Returns:
+        A tuple containing:
+            - The calculated mean value
+            - The type of mean used (e.g., "arithmetic", "weighted", etc.)
+    """
+    
+    # Check for mean rate cases if physical is True
+    if physical and all(isinstance(x, tuple) and len(x) == 2 for x in data):
+        numerators, denominators = zip(*data)
+        if all(x > 0 for x in denominators):  
+            if all(x == numerators[0] for x in numerators):  
+                return mean_rate_case3(data), "mean rate (case 3)"
+            elif all(x == denominators[0] for x in denominators):  
+                return mean_rate_case2(data), "mean rate (case 2)"
+            else:  # Case 1
+                return mean_rate_case1(data), "mean rate (case 1)"
+
+    # Use weighted mean if weight is True and physical is False
+    if weight and all(isinstance(x, tuple) and len(x) == 2 for x in data):
+        if all(x[1] > 0 for x in data):  
+            return weighted_mean(data), "weighted"
+
+    # Check for positive values (geometric/harmonic mean)
+    if all(x > 0 for x in data):
+        if rates: # Use harmonic mean if rates is True
+            return harmonic_mean(data), "harmonic"
+        else: # Use geometric mean if rates is False
+            return geometric_mean(data), "geometric"
+
+    # Default to arithmetic mean if no other criteria are met
+    return arithmetic_mean(data), "arithmetic"
+
+
+def median(data):
+    """
+    Calculates the median of a dataset.
+
+    Args:
+        data: A list of values.
+
+    Returns:
+        The median of the dataset.
+    """
+    data = sorted(data)
+    if len(data) % 2 == 0:
+        return (data[len(data) // 2] + data[(len(data) // 2) - 1]) / 2
+    return data[len(data) // 2]
+
+
+def mode(data):
+    """
+    Calculates the mode of a dataset.
+
+    Args:
+        data: A list of values.
+
+    Returns:
+        The mode of the dataset.
+    """
+    historgram = build_histogram(data)
+    return max(historgram, key=historgram.get)
 
 
 def amplitude(data):
