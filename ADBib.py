@@ -4,11 +4,29 @@ import math
 DECIMAL_PLACES = 2
 
 def mode(data):
+    """
+    Calculates the mode of a dataset.
+
+    Args:
+        data: A list of values.
+
+    Returns:
+        The mode of the dataset.
+    """
     historgram = build_histogram(data)
     return max(historgram, key=historgram.get)
 
 
 def median(data):
+    """
+    Calculates the median of a dataset.
+
+    Args:
+        data: A list of values.
+
+    Returns:
+        The median of the dataset.
+    """
     data = sorted(data)
     if len(data) % 2 == 0:
         return (data[len(data) // 2] + data[(len(data) // 2) - 1]) / 2
@@ -16,10 +34,28 @@ def median(data):
 
 
 def arithmetic_mean(data):
+    """
+    Calculates the arithmetic mean of a dataset.
+
+    Args:
+        data: A list of values.
+
+    Returns:
+        The arithmetic mean of the dataset.
+    """
     return round(sum(data) / len(data), DECIMAL_PLACES)
 
 
 def weighted_mean(data):
+    """
+    Calculates the weighted mean of a dataset.
+
+    Args:
+        data: A list of tuples (value, weight).
+
+    Returns:
+        The weighted mean of the dataset.
+    """
     sum_product, sum_weights = 0,0
 
     for value, weight in data:
@@ -30,6 +66,15 @@ def weighted_mean(data):
 
 
 def geometric_mean(data):
+    """
+    Calculates the geometric mean of a dataset.
+
+    Args:
+        data: A list of positive values.
+
+    Returns:
+        The geometric mean of the dataset.
+    """
     prod = 1
     for num in data:
         prod *= num
@@ -37,6 +82,15 @@ def geometric_mean(data):
 
 
 def harmonic_mean(data):
+    """
+    Calculates the harmonic mean of a dataset.
+
+    Args:
+        dataset: A list of positive values.
+
+    Returns:
+        The harmonic mean of the dataset.
+    """
     sum = 0
     for num in data:
         sum += (1 / num)
@@ -114,3 +168,52 @@ def calculate_quartile(data):
 def interquartile_amp(data):
     q1, _, q3 = calculate_quartile(data)
     return q3 - q1
+
+
+def mean_rate_case1(data):
+    """
+    Calculates the mean rate for case 1, where the sum of numerators and the sum of denominators have physical meaning.
+
+    Args:
+        data: A list of tuples (numerator, denominator) representing the rates.
+
+    Returns:
+        The mean rate.
+    """
+    sum_numerators = sum(numerator for numerator, _ in data)
+    sum_denominators = sum(denominator for _, denominator in data)
+    return sum_numerators / sum_denominators
+
+def mean_rate_case2(data):
+    """
+    Calculates the mean rate for case 2, where the denominator is constant and the sum of numerators has physical meaning.
+
+    Args:
+        data: A list of tuples (numerator, denominator) representing the rates.
+
+    Returns:
+        The mean rate.
+    """
+    if not all(denominator == data[0][1] for _, denominator in data):
+        raise ValueError("Denominators must be constant for case 2.")
+
+    sum_numerators = sum(numerator for numerator, _ in data)
+    denominator = data[0][1]  # Get the constant denominator
+    return sum_numerators / (len(data) * denominator)
+    
+
+def mean_rate_case3(data):
+    """
+    Calculates the mean rate for case 3, where the sum of denominators has physical meaning and the numerators are constant.
+
+    Args:
+        data: A list of tuples (numerator, denominator) representing the rates.
+
+    Returns:
+        The mean rate, rounded to DECIMAL_PLACES decimal places.
+    """
+    if not all(numerator == data[0][0] for numerator, _ in data):
+        raise ValueError("Numerators must be constant for case 3.")
+
+    sum_reciprocals = sum(denominator / numerator for numerator, denominator in data)
+    return len(data) / sum_reciprocals
