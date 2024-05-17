@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import math
+import scipy.stats as stats
+
 
 DECIMAL_PLACES = 2
 
@@ -344,6 +346,23 @@ def build_histogram(data):
             histogram[item] = 0
         histogram[item] += 1
     return histogram
+
+
+def confidence_interval(data, confidence_degree=0.99):
+    mean = arithmetic_mean(data)
+    std_err = standard_deviation(data) / math.sqrt(len(data))
+
+    if len(data) > 30:
+        confidence_value = {
+            0.9: 1.645,
+            0.95: 1.960,
+            0.99: 2.576
+        }
+        return (round(mean - (std_err * confidence_value[confidence_degree]), DECIMAL_PLACES),
+                    round(mean + (std_err * confidence_value[confidence_degree]), DECIMAL_PLACES))
+
+    t_value = stats.t.ppf((1 + confidence_degree) / 2, df=len(data) - 1)
+    return (round(mean - (std_err * t_value), DECIMAL_PLACES), round(mean + (std_err * t_value), DECIMAL_PLACES))
 
 
 def plot_histogram(data, y_label='Frequency', x_label='Values', title='Histogram'):
