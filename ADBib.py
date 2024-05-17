@@ -365,6 +365,30 @@ def confidence_interval(data, confidence_degree=0.99):
     return (round(mean - (std_err * t_value), DECIMAL_PLACES), round(mean + (std_err * t_value), DECIMAL_PLACES))
 
 
+def zero_mean_test(sample_a, sample_b, confidence_degree=0.99):
+    if len(sample_a) == len(sample_b):
+        diff = [(sample_a[i] - sample_b[i]) for i in range(len(sample_a))]
+        min, max = confidence_interval(diff, confidence_degree)
+        return min <= 0 and max >= 0
+
+
+    var_a = variance(sample_a)
+    var_b = variance(sample_b)
+
+    numerator = ((var_a / len(sample_a)) + (var_b / len(sample_b))) ** 2
+    denominator = (((var_a / len(sample_a)) ** 2) * (1 / (1 + len(sample_a)))) + (((var_b / len(sample_b)) ** 2) * (1 / (1 + len(sample_b))))
+    v = (numerator / denominator) - 2
+
+    mean_a = arithmetic_mean(sample_a)
+    mean_b = arithmetic_mean(sample_b)
+    mean_diff = mean_a - mean_b
+
+    t_value = stats.t.ppf((1 + confidence_degree) / 2, df=v)
+    min = round(mean_diff - t_value, DECIMAL_PLACES)
+    max = round(mean_diff + t_value, DECIMAL_PLACES)
+    return min < 0 and max > 0
+
+
 def plot_histogram(data, y_label='Frequency', x_label='Values', title='Histogram'):
     """
     Plots a histogram from a dataset.
