@@ -97,6 +97,56 @@ def harmonic_mean(data):
     return round(len(data) / sum, DECIMAL_PLACES)
 
 
+def mean_rate_case1(data):
+    """
+    Calculates the mean rate for case 1, where the sum of numerators and the sum of denominators have physical meaning.
+
+    Args:
+        data: A list of tuples (numerator, denominator) representing the rates.
+
+    Returns:
+        The mean rate.
+    """
+    sum_numerators = sum(numerator for numerator, _ in data)
+    sum_denominators = sum(denominator for _, denominator in data)
+    return sum_numerators / sum_denominators
+
+
+def mean_rate_case2(data):
+    """
+    Calculates the mean rate for case 2, where the denominator is constant and the sum of numerators has physical meaning.
+
+    Args:
+        data: A list of tuples (numerator, denominator) representing the rates.
+
+    Returns:
+        The mean rate.
+    """
+    if not all(denominator == data[0][1] for _, denominator in data):
+        raise ValueError("Denominators must be constant for case 2.")
+
+    sum_numerators = sum(numerator for numerator, _ in data)
+    denominator = data[0][1]  # Get the constant denominator
+    return sum_numerators / (len(data) * denominator)
+    
+
+def mean_rate_case3(data):
+    """
+    Calculates the mean rate for case 3, where the sum of denominators has physical meaning and the numerators are constant.
+
+    Args:
+        data: A list of tuples (numerator, denominator) representing the rates.
+
+    Returns:
+        The mean rate, rounded to DECIMAL_PLACES decimal places.
+    """
+    if not all(numerator == data[0][0] for numerator, _ in data):
+        raise ValueError("Numerators must be constant for case 3.")
+
+    sum_reciprocals = sum(denominator / numerator for numerator, denominator in data)
+    return len(data) / sum_reciprocals
+
+
 def amplitude(data):
     """
     Calculates the amplitude of a dataset.
@@ -175,7 +225,76 @@ def coefficient_of_variation(data):
     return round((standard_deviation(data) / arithmetic_mean(data)) * 100, DECIMAL_PLACES)
 
 
+def calculate_quartile(data):
+    """
+    Calculates the quartiles of a dataset.
+    
+    Args:
+        data: A list of numerical values.
+        
+    Returns:
+        A tuple (q1, q2, q3) containing the first, second and third quartiles of the dataset.
+    """
+    data = sorted(data)
+    q1 = data[len(data) // 4]
+    q2 = median(data)
+    q3 = data[(3 * len(data)) // 4]
+    return q1, q2, q3
+
+
+def interquartile_amp(data):
+    """
+    Calculates the interquartile amplitude of a dataset.
+
+    Args:
+        data: A list of numerical values.
+
+    Returns:
+        The interquartile amplitude of the dataset.
+    """
+    q1, _, q3 = calculate_quartile(data)
+    return q3 - q1
+
+
+def dispersion_measures(data,unit=""):
+    """
+    Calculates various dispersion measures of a dataset.
+
+    Args:
+        data: A list of numerical values.
+
+    Returns:
+        A dictionary containing the following dispersion measures:
+            - Amplitude
+            - Sample Variance
+            - Sample Standard Deviation
+            - Coefficient of Variation
+            - Quartiles (Q1, Q2, Q3)
+            - Interquartile Range 
+    """
+
+    results = {
+        "Amplitude": f"{amplitude(data)} {unit}" if unit else amplitude(data),
+        "Variância Amostral": f"{variance(data)} {unit}²" if unit else variance(data),
+        "Desvio Padrão Amostral": f"{standard_deviation(data)} {unit}" if unit else standard_deviation(data),
+        "Coeficiente de Variação (%)": coefficient_of_variation(data),
+        "Quartis": calculate_quartile(data),
+        "Amplitude Interquartil": f"{interquartile_amp(data)} {unit}" if unit else interquartile_amp(data),
+    }
+
+    return results
+
+
 def build_histogram(data):
+    """
+    Builds a histogram from a dataset.
+
+    Args:
+        data: A list of values.
+
+    Returns:
+        A dictionary containing the frequency of each value in the dataset.
+    """
     histogram = dict()
     for item in data:
         if item not in histogram:
@@ -185,6 +304,15 @@ def build_histogram(data):
 
 
 def plot_histogram(data, y_label='Frequency', x_label='Values', title='Histogram'):
+    """
+    Plots a histogram from a dataset.
+
+    Args:
+        data: A list of values.
+        y_label: The label of the y-axis.
+        x_label: The label of the x-axis.
+        title: The title of the plot.
+    """
     histogram = build_histogram(data)
     plt.bar(histogram.keys(), histogram.values())
     plt.xlabel(x_label)
@@ -194,6 +322,12 @@ def plot_histogram(data, y_label='Frequency', x_label='Values', title='Histogram
 
 
 def plot_boxplot(data):
+    """
+    Plots a box plot from a dataset.
+
+    Args:
+        data: A list of numerical values.
+    """
     plt.figure(figsize=(8, 6))
     plt.boxplot(data)
     plt.title('Box Plot')
@@ -222,65 +356,3 @@ def plot_values_with_mean(data, mean):
     plt.xlabel('Index')
     plt.ylabel('Value')
     plt.show()
-
-
-def calculate_quartile(data):
-    data = sorted(data)
-    q1 = data[len(data) // 4]
-    q2 = data[len(data) // 2]
-    q3 = data[(2 * len(data)) // 3]
-    return q1, q2, q3
-
-
-def interquartile_amp(data):
-    q1, _, q3 = calculate_quartile(data)
-    return q3 - q1
-
-
-def mean_rate_case1(data):
-    """
-    Calculates the mean rate for case 1, where the sum of numerators and the sum of denominators have physical meaning.
-
-    Args:
-        data: A list of tuples (numerator, denominator) representing the rates.
-
-    Returns:
-        The mean rate.
-    """
-    sum_numerators = sum(numerator for numerator, _ in data)
-    sum_denominators = sum(denominator for _, denominator in data)
-    return sum_numerators / sum_denominators
-
-def mean_rate_case2(data):
-    """
-    Calculates the mean rate for case 2, where the denominator is constant and the sum of numerators has physical meaning.
-
-    Args:
-        data: A list of tuples (numerator, denominator) representing the rates.
-
-    Returns:
-        The mean rate.
-    """
-    if not all(denominator == data[0][1] for _, denominator in data):
-        raise ValueError("Denominators must be constant for case 2.")
-
-    sum_numerators = sum(numerator for numerator, _ in data)
-    denominator = data[0][1]  # Get the constant denominator
-    return sum_numerators / (len(data) * denominator)
-    
-
-def mean_rate_case3(data):
-    """
-    Calculates the mean rate for case 3, where the sum of denominators has physical meaning and the numerators are constant.
-
-    Args:
-        data: A list of tuples (numerator, denominator) representing the rates.
-
-    Returns:
-        The mean rate, rounded to DECIMAL_PLACES decimal places.
-    """
-    if not all(numerator == data[0][0] for numerator, _ in data):
-        raise ValueError("Numerators must be constant for case 3.")
-
-    sum_reciprocals = sum(denominator / numerator for numerator, denominator in data)
-    return len(data) / sum_reciprocals
