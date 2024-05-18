@@ -401,6 +401,12 @@ def estimate_sample_size(confidence_degree, std_dev, mean=None, length=None, pre
     return round((4 * ((std_dev * confidence_value[confidence_degree]) ** 2)) / (length ** 2), DECIMAL_PLACES)
 
 
+def bernoulli_pmf(p, x):
+    if x == 1:
+        return p
+    return 1 - p
+
+
 def bernoulli_expected_value(p):
     return p
 
@@ -411,6 +417,11 @@ def bernoulli_variance(p):
 
 def bernoulli_coefficient_of_variance(p):
     return round(math.sqrt(bernoulli_variance(p)) / p, DECIMAL_PLACES)
+
+
+def binomial_pmf(n, p, k):
+    binomial_coefficient = math.comb(n, k)
+    return round(binomial_coefficient * (p ** k) * ((1 - p) ** (n - k)), DECIMAL_PLACES)
 
 
 def binomail_expected_value(n, p):
@@ -425,6 +436,10 @@ def binomial_coefficient_of_variance(n, p):
     round(math.sqrt(binomial_variance(n, p)) / (n * p), DECIMAL_PLACES)
 
 
+def geometric_pmf(i, p):
+    return round(p * ((1 - p) ** (i - 1)), 3)
+
+
 def geometric_expected_value(p):
     return round(1 / p, DECIMAL_PLACES)
 
@@ -437,7 +452,20 @@ def geometric_coefficient_of_variance(p):
     return round(math.sqrt(geometric_variance(p)) / (1 / p), DECIMAL_PLACES)
 
 
+def poisson_pmf(lmbda, k):
+    return round((lmbda ** k * math.exp(-lmbda)) / math.factorial(k), DECIMAL_PLACES)
 
+
+def poisson_expected_value(lmbda):
+    return lmbda
+
+
+def poisson_variance(lmbda):
+    return lmbda
+
+
+def poisson_coefficient_of_variance(lmbda):
+    return round(math.sqrt(lmbda) / lmbda, DECIMAL_PLACES)
 
 
 def plot_histogram(data, y_label='Frequency', x_label='Values', title='Histogram'):
