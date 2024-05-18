@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import math
 import scipy.stats as stats
+import numpy as np
 
 
 DECIMAL_PLACES = 2
@@ -589,4 +590,102 @@ def calcular_estatisticas_e_plotar_fdp(valores, probabilidades):
 
     print(f"Valor Esperado (Média): {valor_esperado:.3f}")
     print(f'Valor Esperado Quadrado: {valor_esperado_quadrado:.3f}')
+    print(f"Variância: {variancia:.3f}")
+
+
+def uniform_continuous(a, b):
+    """
+    Calculates statistics (expected value, variance) and plots the probability density function (PDF)
+    of a uniform continuous random variable.
+
+    Args:
+        a: Lower bound of the uniform distribution.
+        b: Upper bound of the uniform distribution.
+    """
+    def f(x):
+        if a <= x <= b:
+            return 1 / (b - a)
+        else:
+            return 0
+    
+    valor_esperado = (a + b) / 2
+    variancia = (b - a) ** 2 / 12
+
+    x = np.linspace(a - 1, b + 1, 1000)
+    y = [f(xi) for xi in x]
+    
+    plt.figure(figsize=(8, 5))
+    plt.plot(x, y, label='PDF')
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.title('Probability Density Function - Uniform Continuous')
+    plt.grid(True)
+    plt.legend()
+    plt.show()
+
+    print(f"Valor Esperado (Média): {round(valor_esperado, DECIMAL_PLACES)}")
+    print(f"Variância: {round(variancia, DECIMAL_PLACES)}")
+
+
+def exponential_continuous(lambd):
+    """
+    Calculates statistics (expected value, variance) and plots the probability density function (PDF)
+    of an exponential continuous random variable.
+
+    Args:
+        lambd: Rate parameter of the exponential distribution.
+    """
+    def f(x):
+        if x >= 0:
+            return lambd * np.exp(-lambd * x)
+        else:
+            return 0
+    
+    valor_esperado = 1 / lambd
+    variancia = 1 / lambd ** 2
+
+    x = np.linspace(0, 5 / lambd, 1000)
+    y = [f(xi) for xi in x]
+    
+    plt.figure(figsize=(8, 5))
+    plt.plot(x, y, label='PDF')
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.title('Probability Density Function - Exponential')
+    plt.grid(True)
+    plt.legend()
+    plt.show()
+
+    print(f"Valor Esperado (Média): {round(valor_esperado, DECIMAL_PLACES)}")
+    print(f"Variância: {round(variancia, DECIMAL_PLACES)}")
+
+
+def normal_continuous(mu, sigma):
+    """
+    Calculates statistics (expected value, variance) and plots the probability density function (PDF)
+    of a normal continuous random variable.
+
+    Args:
+        mu: Mean of the normal distribution.
+        sigma: Standard deviation of the normal distribution.
+    """
+    def f(x):
+        return (1 / (sigma * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mu) / sigma) ** 2)
+    
+    valor_esperado = mu
+    variancia = sigma ** 2
+
+    x = np.linspace(mu - 4 * sigma, mu + 4 * sigma, 1000)
+    y = [f(xi) for xi in x]
+    
+    plt.figure(figsize=(8, 5))
+    plt.plot(x, y, label='PDF')
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.title('Probability Density Function - Normal')
+    plt.grid(True)
+    plt.legend()
+    plt.show()
+
+    print(f"Valor Esperado (Média): {valor_esperado:.3f}")
     print(f"Variância: {variancia:.3f}")
