@@ -400,6 +400,45 @@ def estimate_sample_size(confidence_degree, std_dev, mean=None, length=None, pre
     return round((4 * ((std_dev * confidence_value[confidence_degree]) ** 2)) / (length ** 2), DECIMAL_PLACES)
 
 
+def bernoulli_expected_value(p):
+    return p
+
+
+def bernoulli_variance(p):
+    return round(p * (1 - p), DECIMAL_PLACES)
+
+
+def bernoulli_coefficient_of_variance(p):
+    return round(math.sqrt(bernoulli_variance(p)) / p, DECIMAL_PLACES)
+
+
+def binomail_expected_value(n, p):
+    return n * p
+
+
+def binomial_variance(n, p):
+    return round(n * p * (1 - p), DECIMAL_PLACES)
+
+
+def binomial_coefficient_of_variance(n, p):
+    round(math.sqrt(binomial_variance(n, p)) / (n * p), DECIMAL_PLACES)
+
+
+def geometric_expected_value(p):
+    return round(1 / p, DECIMAL_PLACES)
+
+
+def geometric_variance(p):
+    return round((1 - p) / (p ** 2), DECIMAL_PLACES)
+
+
+def geometric_coefficient_of_variance(p):
+    return round(math.sqrt(geometric_variance(p)) / (1 / p), DECIMAL_PLACES)
+
+
+
+
+
 def plot_histogram(data, y_label='Frequency', x_label='Values', title='Histogram'):
     """
     Plots a histogram from a dataset.
