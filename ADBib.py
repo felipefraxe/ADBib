@@ -325,7 +325,8 @@ def dispersion_measures(data,unit=""):
         "Amplitude Interquartil": f"{interquartile_amp(data)} {unit}" if unit else interquartile_amp(data),
     }
 
-    return results
+    for key, value in results.items():
+        print(f'{key}: {value}')
 
 
 def build_histogram(data):
@@ -470,3 +471,55 @@ def plot_values_with_mean(data, mean):
     plt.xlabel('Index')
     plt.ylabel('Value')
     plt.show()
+
+
+def calcular_estatisticas_e_plotar_fdp(valores, probabilidades):
+    """
+    Calcula estatísticas (valor esperado, valor esperado quadrado, variância) e plota a função de distribuição
+    de probabilidade (FDP) de uma variável aleatória discreta.
+
+    Args:
+        valores: Lista de valores que a variável aleatória pode assumir.
+        probabilidades: Lista de probabilidades correspondentes a cada valor.
+    """
+
+    if len(valores) != len(probabilidades):
+        raise ValueError("As listas de valores e probabilidades devem ter o mesmo tamanho.")
+
+    # Cálculo das estatísticas
+    valor_esperado = sum(x * p for x, p in zip(valores, probabilidades))
+    valor_esperado_quadrado = sum(x**2 * p for x, p in zip(valores, probabilidades))
+    variancia = valor_esperado_quadrado - valor_esperado**2
+
+    # Cálculo da FDP 
+    fdp = [0]  # Começa em 0 para x < valor mínimo
+    for p in probabilidades:
+        fdp.append(fdp[-1] + p)
+
+    plt.figure(figsize=(8, 5))
+
+    # Adicionar valores extras para o plot (começar e terminar fora dos valores)
+    extended_values = [valores[0] - 1] + valores + [valores[-1] + 1]
+    extended_fdp = [0] + fdp
+
+    for i in range(1, len(extended_values)):
+        plt.hlines(extended_fdp[i], extended_values[i-1], extended_values[i], colors='red', linewidth=2)
+    
+    plt.hlines(1, valores[-1], valores[-1] + 1, colors='red', linewidth=2)
+    plt.axvline(x=0, color='black', linestyle='-')
+
+    # Ajustar o eixo x para incluir 0
+    all_x_values = sorted(set(valores + [0]))
+    plt.xticks(all_x_values)
+
+    plt.xlabel('x')
+    plt.ylabel('F(x)')
+    plt.title('Função de Distribuição de Probabilidade (FDP)')
+    plt.xticks(valores)
+    plt.ylim(-0.01, 1.01)
+    plt.grid(axis='y', alpha=0.75)
+    plt.show()
+
+    print(f"Valor Esperado (Média): {valor_esperado:.3f}")
+    print(f'Valor Esperado Quadrado: {valor_esperado_quadrado:.3f}')
+    print(f"Variância: {variancia:.3f}")
