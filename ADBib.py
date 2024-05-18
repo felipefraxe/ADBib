@@ -349,6 +349,16 @@ def build_histogram(data):
 
 
 def confidence_interval(data, confidence_degree=0.99):
+    """
+    Calculates the confidence interval of a dataset.
+
+    Args:
+        data: A list of numerical values.
+        confidence_degree: The confidence degree (e.g., 0.95 for 95% confidence).
+
+    Returns:
+        A tuple (min, max) containing the confidence interval of the dataset.
+    """
     mean = arithmetic_mean(data)
     std_err = standard_deviation(data) / math.sqrt(len(data))
 
@@ -366,6 +376,17 @@ def confidence_interval(data, confidence_degree=0.99):
 
 
 def zero_mean_test(sample_a, sample_b, confidence_degree=0.99):
+    """
+    Performs a zero-mean test to determine if two samples are significantly similar.
+
+    Args:
+        sample_a: The first sample.
+        sample_b: The second sample.
+        confidence_degree: The confidence degree (e.g., 0.95 for 95% confidence).
+
+    Returns:
+        True if the samples are significantly similar, False otherwise.
+    """
     if len(sample_a) == len(sample_b):
         diff = [(sample_a[i] - sample_b[i]) for i in range(len(sample_a))]
         min, max = confidence_interval(diff, confidence_degree)
@@ -390,6 +411,19 @@ def zero_mean_test(sample_a, sample_b, confidence_degree=0.99):
 
 
 def estimate_sample_size(confidence_degree, std_dev, mean=None, length=None, precision=None):
+    """"
+    Estimates the sample size required for a given confidence degree, standard deviation, mean, length, and precision.
+
+    Args:
+        confidence_degree: The confidence degree (e.g., 0.95 for 95% confidence).
+        std_dev: The standard deviation of the population.
+        mean: The mean of the population.
+        length: The length of the population.
+        precision: The desired precision of the estimate.
+
+    Returns:
+        The estimated sample size.
+    """
     confidence_value = {
         0.9: 1.645,
         0.95: 1.960,
@@ -403,69 +437,205 @@ def estimate_sample_size(confidence_degree, std_dev, mean=None, length=None, pre
 
 
 def bernoulli_pmf(p, x):
+    """Calculates the probability mass function (PMF) of a Bernoulli random variable.
+
+    Args:
+        p: The probability of success.
+        x: The value at which to evaluate the PMF.
+    
+    Returns:
+        The probability mass function (PMF) of a Bernoulli random variable.
+    """
     if x == 1:
         return p
     return 1 - p
 
 
 def bernoulli_expected_value(p):
+    """Calculates the expected value of a Bernoulli random variable.
+
+    Args:
+        p: The probability of success.
+
+    Returns:
+        The expected value of a Bernoulli random variable.
+    """
     return p
 
 
 def bernoulli_variance(p):
+    """Calculates the variance of a Bernoulli random variable.
+
+    Args:
+        p: The probability of success.
+
+    Returns:
+        The variance of a Bernoulli random variable.
+    """
     return round(p * (1 - p), DECIMAL_PLACES)
 
 
 def bernoulli_coefficient_of_variance(p):
+    """Calculates the coefficient of variance of a Bernoulli random variable.
+
+    Args:
+        p: The probability of success.
+
+    Returns:
+        bernoulli_coefficient_of_variance: The coefficient of variance of a Bernoulli random variable.
+    """
     return round(math.sqrt(bernoulli_variance(p)) / p, DECIMAL_PLACES)
 
 
 def binomial_pmf(n, p, k):
+    """Calculates the probability mass function (PMF) of a binomial random variable.
+
+    Args:
+        n: The number of trials.
+        p: The probability of success.
+        k: The number of successes.
+
+    Returns:
+        The probability mass function (PMF) of a binomial random variable.
+    """
     binomial_coefficient = math.comb(n, k)
     return round(binomial_coefficient * (p ** k) * ((1 - p) ** (n - k)), DECIMAL_PLACES)
 
 
 def binomail_expected_value(n, p):
+    """" Calculates the expected value of a binomial random variable.
+
+    Args:
+        n: The number of trials.
+        p: The probability of success.
+
+    Returns:
+        The expected value of a binomial random variable.
+    """
     return n * p
 
 
 def binomial_variance(n, p):
+    """Calculates the variance of a binomial random variable.
+
+    Args:
+        n: The number of trials.
+        p: The probability of success.
+
+    Returns:
+        The variance of a binomial random variable.
+    """
     return round(n * p * (1 - p), DECIMAL_PLACES)
 
 
 def binomial_coefficient_of_variance(n, p):
+    """Calculates the coefficient of variance of a binomial random variable.
+
+    Args:
+        n: The number of trials.
+        p: The probability of success.
+    
+    Returns:
+        The coefficient of variance of a binomial random variable.
+    """
     round(math.sqrt(binomial_variance(n, p)) / (n * p), DECIMAL_PLACES)
 
 
 def geometric_pmf(i, p):
+    """Calculates the probability mass function (PMF) of a geometric random variable.
+
+    Args:
+        i: The number of trials until the first success.
+        p: The probability of success.
+
+    Returns:
+        The probability mass function (PMF) of a geometric random variable.
+    """
     return round(p * ((1 - p) ** (i - 1)), 3)
 
 
 def geometric_expected_value(p):
+    """" Calculates the expected value of a geometric random variable.
+
+    Args:
+        p: The probability of success.
+
+    Returns:
+        The expected value of a geometric random variable.
+    """
     return round(1 / p, DECIMAL_PLACES)
 
 
 def geometric_variance(p):
+    """Calculates the variance of a geometric random variable.
+
+    Args:
+        p: The probability of success.
+
+    Returns:
+        The variance of a geometric random variable.
+    """
     return round((1 - p) / (p ** 2), DECIMAL_PLACES)
 
 
 def geometric_coefficient_of_variance(p):
+    """Calculates the coefficient of variance of a geometric random variable.
+
+    Args:
+        p: The probability of success.
+
+    Returns:
+        The coefficient of variance of a geometric random variable.
+    """
     return round(math.sqrt(geometric_variance(p)) / (1 / p), DECIMAL_PLACES)
 
 
 def poisson_pmf(lmbda, k):
+    """Calculates the probability mass function (PMF) of a Poisson random variable.
+
+    Args:
+        lmbda: The average number of events per interval.
+        k: The number of events.
+
+    Returns:
+        The probability mass function (PMF) of a Poisson random variable.
+    """
     return round((lmbda ** k * math.exp(-lmbda)) / math.factorial(k), DECIMAL_PLACES)
 
 
 def poisson_expected_value(lmbda):
+    """Calculates the expected value of a Poisson random variable.
+
+    Args:
+        lmbda: The average number of events per interval.
+
+    Returns:
+        The expected value of a Poisson random variable.
+    """
     return lmbda
 
 
 def poisson_variance(lmbda):
+    """Calculates the variance of a Poisson random variable.
+    
+    Args:
+        lmbda: The average number of events per interval.
+
+    Returns:
+        The variance of a Poisson random variable.
+    """
     return lmbda
 
 
 def poisson_coefficient_of_variance(lmbda):
+    """Calculates the coefficient of variance of a Poisson random variable.
+
+    Args:
+        lmbda: The average number of events per interval.
+
+    Returns:
+        The coefficient of variance of a Poisson random variable.
+    """
     return round(math.sqrt(lmbda) / lmbda, DECIMAL_PLACES)
 
 
@@ -689,3 +859,27 @@ def normal_continuous(mu, sigma):
 
     print(f"Valor Esperado (Média): {valor_esperado:.3f}")
     print(f"Variância: {variancia:.3f}")
+
+
+def model_random_variable(distribution, *params):
+    """
+    Models a random variable based on the specified distribution and parameters.
+
+    Args:
+        distribution (str): The type of distribution ('uniform', 'exponential', 'normal').
+        *params: The parameters for the specified distribution.
+    """
+    if distribution == 'uniform':
+        if len(params) != 2:
+            raise ValueError("Uniform distribution requires 2 parameters (a, b).")
+        uniform_continuous(*params)
+    elif distribution == 'exponential':
+        if len(params) != 1:
+            raise ValueError("Exponential distribution requires 1 parameter (lambda).")
+        exponential_continuous(*params)
+    elif distribution == 'normal':
+        if len(params) != 2:
+            raise ValueError("Normal distribution requires 2 parameters (mu, sigma).")
+        normal_continuous(*params)
+    else:
+        raise ValueError("Unsupported distribution type. Choose from 'uniform', 'exponential', or 'normal'.")
