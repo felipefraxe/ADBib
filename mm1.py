@@ -15,18 +15,18 @@ def main():
 
     for i in range(3, 10, 3):
         n = 10 ** i
-        clients = [0.0]
+        wait_times = [0.0]
 
         for j in range(1, n):
             service_time = np.random.exponential(1 / mu) # Tempo de serviço de j-1
             arrival_time = np.random.exponential(1 / lmbda) # Tempo de chegada de j
 
-            curr_wait_time = clients[j-1] - arrival_time + service_time
+            curr_wait_time = wait_times[j-1] - arrival_time + service_time
 
             if curr_wait_time < 0:
                 curr_wait_time = 0
-            clients.append(curr_wait_time)
-        print(ADBib.arithmetic_mean(clients), E)
+            wait_times.append(curr_wait_time)
+        print(ADBib.arithmetic_mean(wait_times), E)
 
 
 if __name__ == "__main__":
