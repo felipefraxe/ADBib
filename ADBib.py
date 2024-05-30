@@ -17,7 +17,7 @@ def arithmetic_mean(data):
     Returns:
         The arithmetic mean of the dataset.
     """
-    return round(sum(data) / len(data), DECIMAL_PLACES)
+    return sum(data) / len(data)
 
 
 def weighted_mean(data):
@@ -240,7 +240,7 @@ def variance(data):
     sum_squares = 0
     for num in data:
         sum_squares += (num - mean) ** 2
-    return round(sum_squares / (len(data)), DECIMAL_PLACES)
+    return sum_squares / len(data)
 
 
 def standard_deviation(data):
@@ -253,7 +253,7 @@ def standard_deviation(data):
     Returns:
         The sample standard deviation of the dataset.
     """
-    return round(math.sqrt(variance(data)), DECIMAL_PLACES)
+    return math.sqrt(variance(data))
 
 
 def coefficient_of_variation(data):
@@ -361,15 +361,14 @@ def confidence_interval(data, confidence_degree=0.99):
     """
     mean = arithmetic_mean(data)
     std_err = standard_deviation(data) / math.sqrt(len(data))
-
     if len(data) > 30:
         confidence_value = {
             0.9: 1.645,
             0.95: 1.960,
             0.99: 2.576
         }
-        return (round(mean - (std_err * confidence_value[confidence_degree]), DECIMAL_PLACES),
-                    round(mean + (std_err * confidence_value[confidence_degree]), DECIMAL_PLACES))
+        return (mean - (std_err * confidence_value[confidence_degree]),
+                    mean + (std_err * confidence_value[confidence_degree]))
 
     t_value = stats.t.ppf((1 + confidence_degree) / 2, df=len(data) - 1)
     return (round(mean - (std_err * t_value), DECIMAL_PLACES), round(mean + (std_err * t_value), DECIMAL_PLACES))

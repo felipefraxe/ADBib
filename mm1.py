@@ -1,6 +1,5 @@
 import numpy as np
 import ADBib
-import ADBib
 
 
 def queue_expected_value(lmbda, mu):
@@ -16,9 +15,12 @@ def main():
 
     for i in range(3, 10, 3):
         n = 10 ** i
-        wait_times = np.zeros(n, dtype=np.float16)
+        wait_times = np.zeros(n, dtype=np.float32)
 
         for j in range(1, n):
+            if j % 10_000_000 == 0:
+                print("ANALISANDO", j)
+
             service_time = np.random.exponential(1 / mu) # Tempo de serviço de j-1
             arrival_time = np.random.exponential(1 / lmbda) # Tempo de chegada de j
 
