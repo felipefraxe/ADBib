@@ -226,24 +226,27 @@ def plot_amplitude(data):
     plt.show()
 
 
-def variance(data):
+def variance(data, mean=None):
     """
     Calculates the sample variance of a dataset.
 
     Args:
         data: A list of numerical values.
+        mean: The mean of the data list.
 
     Returns:
         The sample variance of the dataset.
     """
-    mean = arithmetic_mean(data)
+    if mean == None:
+        mean = arithmetic_mean(data)
+
     sum_squares = 0
     for num in data:
         sum_squares += (num - mean) ** 2
     return sum_squares / len(data)
 
 
-def standard_deviation(data):
+def standard_deviation(data, mean=None):
     """
     Calculates the sample standard deviation of a dataset.
 
@@ -253,7 +256,7 @@ def standard_deviation(data):
     Returns:
         The sample standard deviation of the dataset.
     """
-    return math.sqrt(variance(data))
+    return math.sqrt(variance(data, mean))
 
 
 def coefficient_of_variation(data):
@@ -348,19 +351,19 @@ def build_histogram(data):
     return histogram
 
 
-def confidence_interval(data, confidence_degree=0.99):
+def confidence_interval(data, mean, confidence_degree=0.99):
     """
     Calculates the confidence interval of a dataset.
 
     Args:
         data: A list of numerical values.
+        mean: The mean of the data list.
         confidence_degree: The confidence degree (e.g., 0.95 for 95% confidence).
 
     Returns:
         A tuple (min, max) containing the confidence interval of the dataset.
     """
-    mean = arithmetic_mean(data)
-    std_err = standard_deviation(data) / math.sqrt(len(data))
+    std_err = standard_deviation(data, mean) / math.sqrt(len(data))
     if len(data) > 30:
         confidence_value = {
             0.9: 1.645,
