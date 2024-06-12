@@ -20,6 +20,29 @@ def conaway(data):
     return max_index
 
 
+def fishman(data, mean, k=25):
+    crossed = 0
+    state = True
+
+    if data[0] < mean:
+        state = False
+
+    for i in range(1, len(data)):
+        if state == True:
+            if data[i] < mean:
+                crossed += 1
+                state = not state
+        else:
+            if data[i] >= mean:
+                crossed += 1
+                state = not state
+
+        if crossed == k:
+            return i
+    
+    return len(data) - 1
+
+
 def queue_expected_value(lambd, mu):
     rho = lambd / mu
     return rho / (mu * (1 - rho))
@@ -59,7 +82,9 @@ def main():
                 curr_wait_time = 0
             wait_times[i] = curr_wait_time
 
-        stable_index = conaway(wait_times)
+        # stable_index = conaway(wait_times)
+        stable_index = fishman(wait_times, ADBib.arithmetic_mean(wait_times), 7)
+        print(stable_index)
         wait_times = np.concatenate((wait_times[stable_index+1:], np.zeros(stable_index + 1)))
 
         for i in range(n - stable_index, n):
