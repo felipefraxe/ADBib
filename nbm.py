@@ -11,12 +11,12 @@ def queue_expected_value(lambd, mu):
     return rho / (mu * (1 - rho))
 
 
-def vonNeumann_test(arr, B):
+def vonNeumann_test(arr, B, s=0):
     K = len(arr) // B
     means = np.zeros(B)
     j = 0
     for i in range(0, len(arr), K):
-        mean = ADBib.arithmetic_mean(arr[i:i+K])
+        mean = ADBib.arithmetic_mean(arr[i:i+K-s])
         means[j] = mean
         j += 1
     
